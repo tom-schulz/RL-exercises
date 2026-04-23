@@ -214,6 +214,19 @@ class MarsRover(gym.Env):
         """
         print(f"[MarsRover] pos={self.position}, steps={self.current_steps}")
 
+    def get_next_state(self, state, action: int):
+        print(f"DEBUG: The value of state is {state} and its type is {type(state)}")
+        action = int(action)
+
+        if action == 1 and state < self.states[-1]:
+            next_state = state + 1
+        elif action == 0 and state > self.states[0]:
+            next_state = state - 1
+        else:
+            return state
+        return next_state
+    
+
 
 class MarsRoverPartialObsWrapper(gym.Wrapper):
     """
