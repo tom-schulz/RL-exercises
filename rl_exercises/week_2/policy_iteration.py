@@ -86,14 +86,19 @@ class PolicyIteration(AbstractAgent):
             The selected action and an empty info dictionary.
         """
         # TODO: Return the action according to current policy
-        raise NotImplementedError("predict_action() is not implemented.")
+        action = self.pi[observation]
+        return (action, {})
+        # raise NotImplementedError("predict_action() is not implemented.")
 
     def update_agent(self, *args: tuple, **kwargs: dict) -> None:
         """Run policy iteration to compute the optimal policy and state-action values."""
         if not self.policy_fitted:
             # TODO: Call policy iteration with initialized values
             printr("Initial policy: ", self.pi)
-            raise NotImplementedError("update_agent() is not implemented.")
+            self.Q, self.pi, self.steps = policy_iteration(
+                self.Q, self.pi, (self.S, self.A, self.T, self.R_sa, self.gamma)
+            )
+            # raise NotImplementedError("update_agent() is not implemented.")
             printr("Q: ", self.Q)
             printr("Final policy: ", self.pi)
             printr("Policy iteration steps:", self.steps)
@@ -155,12 +160,31 @@ def policy_evaluation(
     np.ndarray
         The evaluated value function V[s] for all states.
     """
-    nS = R_sa.shape[0]
+    nS = R_sa.shape[
+        0
+    ]  # Shape returns the dimensions of the pair. in this case shape[0] gives us the number of states
     V = np.zeros(nS)
 
     # TODO: implement Policy Evaluation for all states
-
-    return V
+    i = 0
+    while i == 0:
+        max_diff = 0
+        for state in range(nS):
+            Old_value = V[state]  # Contains the Value of V[state] before change
+            action = pi[state]  # action recommend by policy
+            reward = R_sa[state, action]  # R(s, a)
+            value = 0
+            for future_state in range(nS):
+                value = (
+                    value + V[future_state] * T[state, action, future_state]
+                )  # calculate the Value of every possible future State
+            V[state] = reward + gamma * value  # updating Values
+            diff = abs(V[state] - Old_value)
+            if diff > max_diff:
+                max_diff = diff
+        if max_diff < epsilon:
+            i = 1
+    return V  # calculated the Values not Q
 
 
 def policy_improvement(
@@ -190,9 +214,18 @@ def policy_improvement(
     """
     nS, nA = R_sa.shape
     Q = np.zeros((nS, nA))
-    pi_new = None
+    pi_new: np.ndarray = np.zeros(
+        nS, dtype=int
+    )  # for every state there is 1 single action given by the policy
     # TODO: implement Policy Improvement for all states
-
+    for state in range(nS):
+        for action in range(nA):
+            reward = R_sa[state, action]
+            value = 0
+            for future_state in range(nS):
+                value = value + V[future_state] * T[state, action, future_state]
+            Q[state, action] = reward + gamma * value
+        pi_new[state] = np.argmax(Q[state])
     return Q, pi_new
 
 
@@ -224,6 +257,23 @@ def policy_iteration(
     S, A, T, R_sa, gamma = MDP
 
     # TODO: Combine evaluation and improvement in a loop.
+    nS, nA = R_sa.shape
+    counter = 0
+    i = 0
+    while i == 0:  # same like eval, but instead of V, its Q values
+        max_diff = 0
+        Q_old = Q.copy()
+        V = policy_evaluation(pi, T, R_sa, gamma, epsilon)
+        Q, pi = policy_improvement(V, T, R_sa, gamma)
+        counter = counter + 1
+        for s in range(nS):
+            for a in range(nA):
+                diff = abs(Q[s, a] - Q_old[s, a])
+                if diff > max_diff:
+                    max_diff = diff
+        if max_diff < epsilon:
+            i = 1
+    return Q, pi, counter
 
 
 if __name__ == "__main__":

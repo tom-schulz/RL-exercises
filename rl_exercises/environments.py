@@ -188,7 +188,7 @@ class MarsRover(gym.Env):
         next_state : int
             The resulting state.
         """
-        #print(f"DEBUG: The value of state is {state} and its type is {type(state)}")
+        # print(f"DEBUG: The value of state is {state} and its type is {type(state)}")
         action = int(action)
 
         if action == 1 and state < self.states[-1]:
@@ -252,7 +252,6 @@ class MarsRover(gym.Env):
             Render mode (only "human" is supported).
         """
         print(f"[MarsRover] pos={self.position}, steps={self.current_steps}")
-
 
 
 class MarsRoverPartialObsWrapper(gym.Wrapper):
