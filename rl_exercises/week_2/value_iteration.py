@@ -65,7 +65,9 @@ class ValueIteration(AbstractAgent):
             return
 
         # TODO: Call value_iteration() with the MDP components
-        V_opt, pi_opt = None, None  # placeholder
+        V_opt, pi_opt = value_iteration(
+            T=self.T, R_sa=self.R_sa, gamma=self.gamma, seed=self.seed
+        )  # placeholder
 
         self.V = V_opt
         self.pi = pi_opt
@@ -84,7 +86,10 @@ class ValueIteration(AbstractAgent):
             self.update_agent()
 
         # TODO: Return action from learned policy
-        raise NotImplementedError("predict_action() is not implemented.")
+
+        action = self.pi[observation]
+        return (action, {})
+        # raise NotImplementedError("predict_action() is not implemented.")
 
 
 def value_iteration(
@@ -125,10 +130,37 @@ def value_iteration(
     n_states, n_actions = R_sa.shape
     V = np.zeros(n_states, dtype=float)
     # rng = np.random.default_rng(seed)  uncomment this
-    pi = None
+    pi: np.ndarray = np.zeros(n_states, dtype=int)
 
     # TODO: update V using the Q values until convergence
-
+    i = 0
+    while i == 0:
+        max_diff = 0
+        for state in range(n_states):
+            highest_V = float("-inf")  # stores the highest V
+            Old_value = V[state]
+            for action in range(n_actions):
+                reward = R_sa[state, action]
+                value = 0
+                for future_state in range(n_states):
+                    value = value + V[future_state] * T[state, action, future_state]
+                current_V = reward + gamma * value
+                if current_V > highest_V:
+                    highest_V = current_V
+            diff = abs(highest_V - Old_value)
+            if diff > max_diff:
+                max_diff = diff
+            V[state] = highest_V
+        if max_diff < epsilon:
+            i = 1
     # TODO: Extract the greedy policy from V and update pi
-
+    Q = np.zeros((n_states, n_actions))
+    for state in range(n_states):
+        for action in range(n_actions):
+            reward = R_sa[state, action]
+            value = 0
+            for future_state in range(n_states):
+                value = value + V[future_state] * T[state, action, future_state]
+            Q[state, action] = reward + gamma * value
+        pi[state] = np.argmax(Q[state])
     return V, pi
