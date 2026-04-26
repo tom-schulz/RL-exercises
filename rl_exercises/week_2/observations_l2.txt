@@ -1,0 +1,2 @@
+Policy iteration and value iteration wouldn't work as they both rely on the sum of the values of the following states. In order to calculate that value, the probability
+of the actions, which resulted in the next states, are needed. The function step() does not provide this information as it only gives the immeadiate state and reward. 
