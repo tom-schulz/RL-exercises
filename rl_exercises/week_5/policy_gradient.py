@@ -169,7 +169,9 @@ class REINFORCEAgent(AbstractAgent):
         # normalize advantages
         # TODO: Normalize advantages with mean and standard deviation,
         # and add 1e-8 to the denominator to avoid division by zero
-        advantages = (returns_t - returns_t.mean()) / (returns_t.std() + 1e-8)
+        advantages = (returns_t - returns_t.mean()) / (
+            returns_t.std(correction=0) + 1e-8
+        )
 
         lp_tensor = torch.stack(log_probs)
         loss = -torch.sum(lp_tensor * advantages)
