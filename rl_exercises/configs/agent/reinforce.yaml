@@ -3,6 +3,7 @@
 # Gymnasium environment settings
 env:
   name: CartPole-v1
+  max_episode_steps: 100
 
 # Random seed for reproducibility
 seed: 0

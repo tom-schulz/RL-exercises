@@ -1,0 +1,105 @@
+1. We changed the length of the trajectories to 100 and 200. The change in CartPole-v1 had little effects. A possible reason is, that the episodes dinished befor reachin the limit.
+2. We used LunarLander-v3 and it showed a much higher variance and less stable learning behaviour compared to CartPole-v1. A possible reason is, that the longer and more complex trajectories make the reinforce updates noisier. So the same architecture and learning rate that worked reasonably well for CartPole-v1 did not work as well for LunarLander-v3. 
+3. reinforce required around 130 episodes befor reaching a reward of 500. However, training remained unstable and evaluation rewards fluctuated strongly afterwards. This suggests relatively poor sample efficiency compared to DQN, which is generally more stable
+
+
+For 1:
+config: {'env': {'name': 'CartPole-v1', 'max_episode_steps': 100}, 'seed': 0, 'agent': {'lr': 0.01, 'gamma': 0.99, 'hidden_size': 128}, 'train': {'episodes': 250, 'eval_interval': 50, 'eval_episodes': 5}}
+[Train] Ep  10 Return  21.0 Loss -0.659
+[Train] Ep  20 Return  12.0 Loss -1.042
+[Train] Ep  30 Return  39.0 Loss -0.173
+[Train] Ep  40 Return  53.0 Loss -0.148
+[Train] Ep  50 Return  91.0 Loss 0.837
+[Eval ] Ep  50 AvgReturn 463.2 ± 73.6
+[Train] Ep  60 Return 208.0 Loss 3.378
+[Train] Ep  70 Return 113.0 Loss -1.327
+[Train] Ep  80 Return 223.0 Loss -1.912
+[Train] Ep  90 Return 158.0 Loss 4.055
+[Train] Ep 100 Return 145.0 Loss -5.631
+[Eval ] Ep 100 AvgReturn 150.4 ±  5.3
+[Train] Ep 110 Return 143.0 Loss 0.716
+[Train] Ep 120 Return 195.0 Loss 2.491
+[Train] Ep 130 Return 500.0 Loss 12.707
+[Train] Ep 140 Return 197.0 Loss 4.460
+[Train] Ep 150 Return 342.0 Loss -4.069
+[Eval ] Ep 150 AvgReturn 425.4 ± 42.5
+[Train] Ep 160 Return 133.0 Loss -9.534
+[Train] Ep 170 Return 101.0 Loss -4.010
+[Train] Ep 180 Return 182.0 Loss 1.936
+[Train] Ep 190 Return 225.0 Loss 6.623
+[Train] Ep 200 Return 177.0 Loss 5.936
+[Eval ] Ep 200 AvgReturn 254.0 ± 23.1
+[Train] Ep 210 Return 246.0 Loss -0.471
+[Train] Ep 220 Return 297.0 Loss -2.107
+[Train] Ep 230 Return 500.0 Loss 2.963
+[Train] Ep 240 Return 356.0 Loss 3.973
+[Train] Ep 250 Return 307.0 Loss 4.913
+[Eval ] Ep 250 AvgReturn 215.4 ± 15.2
+Training complete.
+
+config: {'env': {'name': 'CartPole-v1', 'max_episode_steps': 200}, 'seed': 0, 'agent': {'lr': 0.01, 'gamma': 0.99, 'hidden_size': 128}, 'train': {'episodes': 250, 'eval_interval': 50, 'eval_episodes': 5}}
+[Train] Ep  10 Return  21.0 Loss -0.659
+[Train] Ep  20 Return  12.0 Loss -1.042
+[Train] Ep  30 Return  39.0 Loss -0.173
+[Train] Ep  40 Return  53.0 Loss -0.148
+[Train] Ep  50 Return  91.0 Loss 0.837
+[Eval ] Ep  50 AvgReturn 472.0 ± 56.0
+[Train] Ep  60 Return 208.0 Loss 3.378
+[Train] Ep  70 Return 113.0 Loss -1.327
+[Train] Ep  80 Return 223.0 Loss -1.912
+[Train] Ep  90 Return 158.0 Loss 4.055
+[Train] Ep 100 Return 145.0 Loss -5.631
+[Eval ] Ep 100 AvgReturn 143.8 ±  7.4
+[Train] Ep 110 Return 143.0 Loss 0.716
+[Train] Ep 120 Return 195.0 Loss 2.491
+[Train] Ep 130 Return 500.0 Loss 12.707
+[Train] Ep 140 Return 197.0 Loss 4.460
+[Train] Ep 150 Return 342.0 Loss -4.069
+[Eval ] Ep 150 AvgReturn 398.0 ± 65.8
+[Train] Ep 160 Return 133.0 Loss -9.534
+[Train] Ep 170 Return 101.0 Loss -4.010
+[Train] Ep 180 Return 182.0 Loss 1.936
+[Train] Ep 190 Return 225.0 Loss 6.623
+[Train] Ep 200 Return 177.0 Loss 5.936
+[Eval ] Ep 200 AvgReturn 261.6 ± 24.1
+[Train] Ep 210 Return 246.0 Loss -0.471
+[Train] Ep 220 Return 297.0 Loss -2.107
+[Train] Ep 230 Return 500.0 Loss 2.963
+[Train] Ep 240 Return 356.0 Loss 3.973
+[Train] Ep 250 Return 307.0 Loss 4.913
+[Eval ] Ep 250 AvgReturn 216.2 ± 13.5
+Training complete.
+
+For 2:
+config: {'env': {'name': 'LunarLander-v3', 'max_episode_steps': 100}, 'seed': 0, 'agent': {'lr': 0.01, 'gamma': 0.99, 'hidden_size': 128}, 'train': {'episodes': 250, 'eval_interval': 50, 'eval_episodes': 5}}
+[Train] Ep  10 Return -249.6 Loss 5.182
+[Train] Ep  20 Return -138.1 Loss -5.828
+[Train] Ep  30 Return -110.6 Loss 0.931
+[Train] Ep  40 Return -114.6 Loss -3.463
+[Train] Ep  50 Return -70.4 Loss -3.565
+[Eval ] Ep  50 AvgReturn -526.0 ± 117.9
+[Train] Ep  60 Return -154.0 Loss 9.182
+[Train] Ep  70 Return  21.9 Loss -4.051
+[Train] Ep  80 Return -428.7 Loss 36.265
+[Train] Ep  90 Return -94.1 Loss 72.040
+[Train] Ep 100 Return -311.5 Loss 68.717
+[Eval ] Ep 100 AvgReturn -283.8 ± 12.6
+[Train] Ep 110 Return   8.0 Loss 14.402
+[Train] Ep 120 Return -118.4 Loss 6.174
+[Train] Ep 130 Return  24.9 Loss 12.075
+[Train] Ep 140 Return  82.2 Loss 24.511
+[Train] Ep 150 Return 253.0 Loss 34.471
+[Eval ] Ep 150 AvgReturn -15.9 ± 19.6
+[Train] Ep 160 Return -52.4 Loss 10.291
+[Train] Ep 170 Return  -4.3 Loss 7.224
+[Train] Ep 180 Return  31.9 Loss 8.733
+[Train] Ep 190 Return   7.6 Loss 7.048
+[Train] Ep 200 Return  -2.2 Loss 11.973
+[Eval ] Ep 200 AvgReturn -52.7 ± 45.9
+[Train] Ep 210 Return  -4.5 Loss -1.995
+[Train] Ep 220 Return -24.2 Loss 5.390
+[Train] Ep 230 Return   0.4 Loss -9.171
+[Train] Ep 240 Return -25.8 Loss 11.493
+[Train] Ep 250 Return  -1.3 Loss 6.832
+[Eval ] Ep 250 AvgReturn -29.7 ± 26.1
+Training complete.
