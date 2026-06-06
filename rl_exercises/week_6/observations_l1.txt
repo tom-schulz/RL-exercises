@@ -1,0 +1,7 @@
+Cart-Pole-v1
+Results: The value baseline learns fastest and reaches the highest stable return (~500) throughout training. GAE reaches the maximum early but then collapses, while no baseline and running average improve more slowly and inconsistently.
+Conceptual Justification: The value baseline's continuously updated critic keeps advantages centered around zero, preventing oversized updates. GAE's collapse illustrates that high-precision gradients without a trust-region constraint can destroy the policy irreversibly — one bad update leads to bad data, causing further degradation. No baseline's wide confidence intervals reveal that its competitive mean return is a seed artifact rather than reliable learning.
+
+LunarLander-v3
+Results: All baselines remain negative throughout training, with value baseline and running average stabilizing most reliably around −100. GAE shows large downward spikes and ends lowest. 200k steps are insufficient to solve LunarLander-v3, making differences subtle.
+Conceptual Justification: GAE is hurt most by an inaccurate critic early in training — biased advantages pointing in the wrong direction slow learning more than unbiased noisy gradients would. The value baseline stabilizes fastest due to smooth critic-policy co-adaptation. Wide confidence intervals across all methods confirm that robust conclusions require more seeds and longer training.
